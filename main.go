@@ -24,14 +24,17 @@ func main() {
 	ch2 := make(chan string)
 
 	cep := "60822345"
-	go GetAPI("https://brasilapi.com.br/api/cep/v1/"+cep, ch1)
-	go GetAPI("http://viacep.com.br/ws/"+cep+"/json", ch2)
+	url1 := "https://brasilapi.com.br/api/cep/v1/" + cep
+	url2 := "http://viacep.com.br/ws/" + cep + "/json"
+
+	go GetAPI(url1, ch1)
+	go GetAPI(url2, ch2)
 
 	select {
 	case result := <-ch1:
-		fmt.Printf("BrasilAPI\n---\n%s\n", result)
+		fmt.Printf("%s\n-------------------------------\n%s\n", url1, result)
 	case result := <-ch2:
-		fmt.Printf("ViaCEP\n---\n%s\n", result)
+		fmt.Printf("%s\n-------------------------------\n%s\n", url2, result)
 	case <-time.After(1 * time.Second):
 		fmt.Println("timeout")
 	}
